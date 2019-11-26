@@ -1,0 +1,42 @@
+body,
+html {
+    -webkit-app-region: drag;
+    height: 100%;
+    position: relative;
+}
+
+a {
+    -webkit-app-region: no-drag;
+    background: green;
+    color: #fff;
+    text-decoration: none;
+    width: 100px;
+    height: 100px;
+    display: inline-block;
+    border-radius: 50px;
+    line-height: 100px;
+    text-align: center;
+    margin: 0 10px;
+}
+
+a.openbtn {
+    background: red;
+}
+
+.caozuo_btn {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+p {
+    padding: 10px;
+    color: grey;
+    position: absolute;
+    top: 0;
+}
+
+p em {
+    color: khaki;
+}

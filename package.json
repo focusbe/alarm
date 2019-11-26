@@ -1,0 +1,23 @@
+{
+  "name": "fangdao",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./app/main.js",
+  "scripts": {
+    "package": "electron-packager . 'Alarm' --platform=darwin --arch=x64 --icon=./assets/alarmLogo.icns --out=./output --overwrite --asar --app-version=1.0.0 --ignore=\"(.gitignore|LICENSE|README.md)\"",
+    "dev": "electron ./app/main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^7.1.2",
+    "electron-packager": "^14.1.1"
+  },
+  "dependencies": {
+    "jquery": "1",
+    "osx-volume-controls": "^1.0.1",
+    "request": "^2.88.0",
+    "sudo-prompt": "^9.1.1"
+  }
+}
