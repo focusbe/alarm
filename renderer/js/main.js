@@ -243,7 +243,7 @@ var Jingbao = {
         volumsControl.set(this.curVolum);
         this.clock = setInterval(() => {
             var curVolum = this.curVolum += 10;
-            if (curVolum >= 20) {
+            if (curVolum >= 80) {
                 clearInterval(this.clock);
                 return;
             }

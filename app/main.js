@@ -46,7 +46,7 @@ var Main = {
                 slashes: true
             });
             win.loadURL(renderhtml);
-            win.webContents.openDevTools();
+            //win.webContents.openDevTools();
             powerMonitor.on('resume', function () {
                 win.webContents.send('powerMonitor', 'resume');
             });
