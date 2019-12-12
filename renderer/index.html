@@ -5,16 +5,75 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title></title>
+    <title>Alarm</title>
+    <link rel="stylesheet" href="./css/milligram.min.css">
     <link rel="stylesheet" href="./css/index.css">
 </head>
 
 <body>
-    <p>当前状态：<em class="curstatus"></em></p>
+    <div class="container">
+        <br>
+        <div class="row">
+            <div class="column">
+                <h2 class="status_p">当前状态：<em class="curstatus"></em></h2>
+            </div>
+        </div>
+
+        <div class="yourphone">您的手机号：<em class="binedephone"> </em> <a href="javascript:void(0)"
+                class="button bindphone button-outline">修改</a></div>
+        <form class="binform">
+            <fieldset>
+                <div class="row">
+                    <div class="column column-20">
+                        <select id="contrycode">
+                            <option checked value="+86">中国</option>
+                            <option value="+82">韩国</option>
+                        </select>
+                    </div>
+                    <div class="column column-offset-10">
+                        <input type="text" placeholder="手机号" maxlength="11" id="phonenum">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="column">
+                        <input class="smscode" placeholder="请输入短信验证码" maxlength="6" type="text">
+                    </div>
+
+                    <div class="column column-offset-10">
+                        <a class="sendsms button" href="javascript:void(0)">发送短信验证码</a>
+                    </div>
+                </div>
+
+                <div class="button_wrap">
+                    <input class="button-primary" type="submit" value="确定">
+                    <a class="button-outline cancle_btn button">取消</a>
+                </div>
+
+
+            </fieldset>
+        </form>
+        <div class="button_wrap">
+            <a class="button openbtn" href="javascript:void(0)">开启防盗</a>
+            <a class="button closebtn button-outline" href="javascript:void(0)">关闭防盗</a>
+        </div>
+
+    </div>
+    <!-- <p class="status_p">当前状态：<em class="curstatus"></em></p>
+    <div>您的手机号：<em></em> <button>修改</button></div>
+    <div>
+        <input placeholder="请输入手机号" type="tel">
+        <br>
+        <input placeholder="请输入短信验证码" maxlength="6" type="text">
+        <button>发送短信验证码</button>
+        <br>
+        <button>绑定</button>
+    </div>
     <div class="caozuo_btn">
         <a class="openbtn" href="javascript:void(0)">开启防盗</a>
         <a class="closebtn" href="javascript:void(0)">关闭防盗</a>
-    </div>
+    </div> -->
+
     <script src="./js/main.js"></script>
 </body>
 

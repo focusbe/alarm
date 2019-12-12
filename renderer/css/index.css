@@ -3,9 +3,17 @@ html {
     -webkit-app-region: drag;
     height: 100%;
     position: relative;
+    padding: 0;
+    margin: 0;
 }
 
-a {
+.button,
+input {
+    -webkit-app-region: no-drag;
+}
+
+/* 
+.caozuo_btn a {
     -webkit-app-region: no-drag;
     background: green;
     color: #fff;
@@ -24,19 +32,44 @@ a.openbtn {
 }
 
 .caozuo_btn {
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    height: auto;
+
 }
 
-p {
+.status_p {
     padding: 10px;
     color: grey;
-    position: absolute;
+
     top: 0;
 }
 
-p em {
+.status_p em {
     color: khaki;
+}
+input
+{
+    outline: none;
+    padding: 5px 10px;
+}
+button{
+    height: 30px;
+    line-height: 30px;
+
+    outline: none;
+} */
+.row {
+    flex-direction: row;
+}
+
+.button_wrap {
+    text-align: center;
+}
+
+.binform {
+    display: none;
+}
+
+.yourphone,
+.status_p {
+    text-align: center;
 }
