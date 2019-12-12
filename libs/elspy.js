@@ -10,7 +10,7 @@ var Elspy = {
                 // console.log(...arum);
                 //console.log(ipc);
                 for (var i in arum) {
-                    if (arum[i].toString().indexOf('-fun-:') > -1) {
+                    if (!!arum[i]&&arum[i].toString().indexOf('-fun-:') > -1) {
                         var cbid = arum[i].replace('-fun-:', '');
                         arum[i] = function (...params) {
                             // ipcMain.send()
