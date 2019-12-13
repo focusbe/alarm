@@ -3,12 +3,15 @@ const path = require('path');
 const ipcRenderer = require("electron").ipcRenderer;
 const volumsControl = require("osx-volume-controls");
 const $ = require('jquery');
+const remote = require('electron').remote;
+const Main = remote.getGlobal('Main');
 var oldVolum;
-const Elspy = require(path.resolve(__dirname, '../libs/elspy.js'));
-
 volumsControl.volumeState(function (err, volume) {
     oldVolum = volume;
 });
+// Main.sendAlarm('+8618602174183',function(bool,res){
+//     console.log(res);
+// });
 var constraints = {
     audio: false,
     video: {
@@ -116,11 +119,14 @@ var Render = {
                     $(this).html(time + 'S');
                 }
             }, 1000);
-            Elspy.sendSms(contrycode + phone, function (bool, res) {
-                if (!bool || res || res.SendStatusSet[0].Code != 'Ok') {
+            Main.sendSms(contrycode + phone, function (bool, res) {
+                if (!bool || !res || res.SendStatusSet[0].Code != 'Ok') {
                     alert('发送失败');
                     clearInterval(clock);
                     $(".sendsms").removeClass('disable').html($(".sendsms").attr('oldhtml'));
+                }
+                else{
+                    alert('发送成功');
                 }
                 console.log(res);
             });
@@ -134,7 +140,7 @@ var Render = {
                 alert('请输入短信验证码');
                 return false;
             }
-            Elspy.checkSms(smscode, function (phone) {
+            Main.checkSms(smscode, function (phone) {
                 if (!!phone) {
                     window.localStorage.setItem('phonenum', phone);
                     self.getPhone();
@@ -195,7 +201,7 @@ var Render = {
         }
         var clock = setTimeout(() => {
             Jingbao.start();
-        }, 3000);
+        }, 5000);
         Pmset.enableSleep((bool) => {
             clearTimeout(clock);
             cb(bool);
@@ -224,13 +230,13 @@ var Render = {
         });
     }
 }
-// Elspy.sendAlarm(Render.getPhone(), function (bool, res) {
+// Main.sendAlarm(Render.getPhone(), function (bool, res) {
 //     console.log(res);
 // });
 Render.init();
 var Jingbao = {
     start() {
-        Elspy.sendAlarm(Render.getPhone(), function (bool, res) {
+        Main.sendAlarm(Render.getPhone(), function (bool, res) {
             console.log(res);
         });
         if (!this.jingbao) {

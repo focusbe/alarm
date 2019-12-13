@@ -6,22 +6,14 @@ var Elspy = {
         if (!!ipcMain) {
             this.obj = Obj;
             ipcMain.on('_callMainfun', function (ipc, key, arum) {
-                // console.log(key);
-                // console.log(...arum);
-                //console.log(ipc);
                 for (var i in arum) {
                     if (!!arum[i]&&arum[i].toString().indexOf('-fun-:') > -1) {
                         var cbid = arum[i].replace('-fun-:', '');
                         arum[i] = function (...params) {
-                            // ipcMain.send()
-                            //Obj[key](...arum);
-                            //console.log('执行回调函数');
                             ipc.sender.webContents.send('_callback', cbid, params);
                         }
                     }
                 }
-                // console.log(Obj);
-                // console.log(key);
                 Obj[key](...arum);
             });
         }

@@ -15,8 +15,7 @@ httpProfile.endpoint = "sms.tencentcloudapi.com";
 let clientProfile = new ClientProfile();
 clientProfile.httpProfile = httpProfile;
 let client = new SmsClient(cred, "ap-shanghai", clientProfile);
-const Elspy = require("../libs/elspy");
-
+//const Elspy = require("../libs/elspy");
 var Main = {
     init: function () {
         var self = this;
@@ -46,7 +45,10 @@ var Main = {
                 slashes: true
             });
             win.loadURL(renderhtml);
-            //win.webContents.openDevTools();
+            if (__dirname.indexOf('asar') < 0) {
+                win.webContents.openDevTools();
+            }
+
             powerMonitor.on('resume', function () {
                 win.webContents.send('powerMonitor', 'resume');
             });
@@ -92,7 +94,10 @@ var Main = {
         var computername = '';
         // console.log('computername' + computername);
         let req = new models.SendSmsRequest();
-        let params = '{"PhoneNumberSet":["' + phone + '"],"TemplateID":"497287","Sign":"FOCUSBE","TemplateParamSet":["' + computername + '"],"SmsSdkAppid":"1400294742"}'
+        var isChina = phone.indexOf('+86') == 0;
+        var Sign = isChina ? 'FOCUSBE' : 'Focusbe';
+        var TemplateID = isChina ? '497287' : '497281';
+        let params = '{"PhoneNumberSet":["' + phone + '"],"TemplateID":"' + TemplateID + '","Sign":"' + Sign + '","TemplateParamSet":["' + computername + '"],"SmsSdkAppid":"1400294742"}'
         req.from_json_string(params);
         client.SendSms(req, function (errMsg, response) {
             if (errMsg) {
@@ -110,11 +115,14 @@ var Main = {
         //     cb(false, "请输入正确的手机号");
         //     return;
         // }
+        var isChina = phone.indexOf('+86') == 0;
+        var Sign = isChina ? 'FOCUSBE' : 'Focusbe';
+        var TemplateID = isChina ? '496908' : '497278';
         this.curphone = phone;
         this.smscode = ('000000' + Math.floor(Math.random() * 999999)).slice(-6);
         let req = new models.SendSmsRequest();
         //console.log(this.smscode);
-        let params = '{"PhoneNumberSet":["' + phone + '"],"TemplateID":"496908","Sign":"FOCUSBE","TemplateParamSet":["' + this.smscode + '"],"SmsSdkAppid":"1400294742"}'
+        let params = '{"PhoneNumberSet":["' + phone + '"],"TemplateID":"' + TemplateID + '","Sign":"' + Sign + '","TemplateParamSet":["' + this.smscode + '"],"SmsSdkAppid":"1400294742"}'
         req.from_json_string(params);
         client.SendSms(req, function (errMsg, response) {
             if (errMsg) {
@@ -126,7 +134,8 @@ var Main = {
     }
 }
 Main.init();
-Elspy._spy(Main);
+global.Main = Main;
+//Elspy._spy(Main);
 function isPoneAvailable($poneInput) {
     var myreg = /^[1][3,4,5,7,8][0-9]{9}$/;
     if (!myreg.test($poneInput)) {
