@@ -244,17 +244,17 @@ var Jingbao = {
             this.jingbao.loop = true;
             this.jingbao.src = './sounds/baojing.mp3';
         }
-        this.jingbao.play();
+        //this.jingbao.play();
         this.curVolum = 10;
         volumsControl.set(this.curVolum);
-        this.clock = setInterval(() => {
-            var curVolum = this.curVolum += 10;
-            if (curVolum >= 80) {
-                clearInterval(this.clock);
-                return;
-            }
-            volumsControl.set(curVolum);
-        }, 3000);
+        // this.clock = setInterval(() => {
+        //     var curVolum = this.curVolum += 10;
+        //     if (curVolum >= 80) {
+        //         clearInterval(this.clock);
+        //         return;
+        //     }
+        //     volumsControl.set(curVolum);
+        // }, 3000);
     },
     stop() {
         if (!!this.clock) {
