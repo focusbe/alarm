@@ -3,7 +3,7 @@ const path = require('path');
 const ipcRenderer = require("electron").ipcRenderer;
 const volumsControl = require("osx-volume-controls");
 const $ = require('jquery');
-const remote = require('electron').remote;
+const remote = require('@electron/remote');
 const Main = remote.getGlobal('Main');
 var oldVolum;
 volumsControl.volumeState(function (err, volume) {
@@ -120,7 +120,7 @@ var Render = {
                 }
             }, 1000);
             Main.sendSms(contrycode + phone, function (bool, res) {
-                if (!bool || !res || res.SendStatusSet[0].Code != 'Ok') {
+                if (!bool) {
                     alert('发送失败');
                     clearInterval(clock);
                     $(".sendsms").removeClass('disable').html($(".sendsms").attr('oldhtml'));
@@ -244,8 +244,8 @@ var Jingbao = {
             this.jingbao.loop = true;
             this.jingbao.src = './sounds/baojing.mp3';
         }
-        //this.jingbao.play();
-        this.curVolum = 10;
+        this.jingbao.play();
+        this.curVolum = 30;
         volumsControl.set(this.curVolum);
         // this.clock = setInterval(() => {
         //     var curVolum = this.curVolum += 10;

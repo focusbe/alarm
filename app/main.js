@@ -1,21 +1,10 @@
-const { ipcMain, app, BrowserWindow, powerMonitor } = require('electron')
-const sudo = require("sudo-prompt");
-const path = require("path");
-const url = require("url");
-const os = require("os");
-const tencentcloud = require("tencentcloud-sdk-nodejs");
-const SmsClient = tencentcloud.sms.v20190711.Client;
-const models = tencentcloud.sms.v20190711.Models;
-const Credential = tencentcloud.common.Credential;
-const ClientProfile = tencentcloud.common.ClientProfile;
-const HttpProfile = tencentcloud.common.HttpProfile;
-let cred = new Credential("AKIDFJ7h2BWr7BzYsxIR1QcZGj13qX2Iw4bu", "FKH1Wlmb9XgkdGdleIm3FF0VlnaJqLdg");
-let httpProfile = new HttpProfile();
-httpProfile.endpoint = "sms.tencentcloudapi.com";
-let clientProfile = new ClientProfile();
-clientProfile.httpProfile = httpProfile;
-let client = new SmsClient(cred, "ap-shanghai", clientProfile);
-//const Elspy = require("../libs/elspy");
+const { ipcMain, app, BrowserWindow, powerMonitor } = require('electron');
+const sudo = require('sudo-prompt');
+const path = require('path');
+const url = require('url');
+const axios = require('axios');
+const ApiUrl = 'http://localhost:8801';
+require('@electron/remote/main').initialize();
 var Main = {
     init: function () {
         var self = this;
@@ -33,22 +22,26 @@ var Main = {
     createWin: function () {
         app.on('ready', () => {
             let win = new BrowserWindow({
-                width: 400, height: 400,
+                width: 800,
+                height: 400,
                 frame: false,
                 webPreferences: {
-                    nodeIntegration: true
-                }
+                    nodeIntegration: true,
+                    contextIsolation: false,
+                    enableRemoteModule: true,
+                },
             });
+
             var renderhtml = url.format({
-                pathname: path.join(__dirname, "../renderer/index.html"),
-                protocol: "file",
-                slashes: true
+                pathname: path.join(__dirname, '../renderer/index.html'),
+                protocol: 'file',
+                slashes: true,
             });
             win.loadURL(renderhtml);
             if (__dirname.indexOf('asar') < 0) {
                 win.webContents.openDevTools();
             }
-
+            require('@electron/remote/main').enable(win.webContents);
             powerMonitor.on('resume', function () {
                 win.webContents.send('powerMonitor', 'resume');
             });
@@ -61,81 +54,116 @@ var Main = {
             powerMonitor.on('unlock-screen', function () {
                 win.webContents.send('powerMonitor', 'unlock');
             });
-        })
+            // this.sendAlarm('+8618602174183');
+        });
         app.on('will-quit', function (e) {
             // console.log('will quit');
             //e.preventDefault();
         });
     },
     disableSleep: function () {
-        sudo.exec('pmset -a disablesleep 1', {
-            name: 'Fangdao',
-            icns: path.resolve(__dirname, "./assets/norecode.icns")
-        }, function (code, stdout, stderr) {
-            console.log(code);
-        });
+        sudo.exec(
+            'pmset -a disablesleep 1',
+            {
+                name: 'Fangdao',
+                icns: path.resolve(__dirname, './assets/norecode.icns'),
+            },
+            function (code, stdout, stderr) {
+                console.log(code);
+            }
+        );
     },
     enableSleep: function () {
-        sudo.exec('pmset -a disablesleep1 0', {
-            name: 'Fangdao',
-            icns: path.rsolve(__dirname, "./assets/norecode.icns")
-        }, function (code, stdout, stderr) {
-            console.log(code);
-        });
-    },
-    // checkSms(cb) {
-
-    // },
-    checkSms: function (code, cb) {
-        var res = !!code && code == this.smscode ? this.curphone : false;
-        cb(res);
-    },
-    sendAlarm(phone, cb) {
-        var computername = '';
-        // console.log('computername' + computername);
-        let req = new models.SendSmsRequest();
-        var isChina = phone.indexOf('+86') == 0;
-        var Sign = isChina ? 'FOCUSBE' : 'Focusbe';
-        var TemplateID = isChina ? '497287' : '497281';
-        let params = '{"PhoneNumberSet":["' + phone + '"],"TemplateID":"' + TemplateID + '","Sign":"' + Sign + '","TemplateParamSet":["' + computername + '"],"SmsSdkAppid":"1400294742"}'
-        req.from_json_string(params);
-        client.SendSms(req, function (errMsg, response) {
-            if (errMsg) {
-                cb(false, errMsg);
-                return;
+        sudo.exec(
+            'pmset -a disablesleep1 0',
+            {
+                name: 'Fangdao',
+                icns: path.rsolve(__dirname, './assets/norecode.icns'),
+            },
+            function (code, stdout, stderr) {
+                console.log(code);
             }
-            cb(true, response);
-        });
+        );
     },
-    sendSms(phone, cb) {
-        if (!cb) {
-            cb = function () { };
+    checkSms: async function (code, cb) {
+        if (!this.phone) {
+            cb(false);
         }
-        // if (!isPoneAvailable(phone)) {
-        //     cb(false, "请输入正确的手机号");
-        //     return;
-        // }
-        var isChina = phone.indexOf('+86') == 0;
-        var Sign = isChina ? 'FOCUSBE' : 'Focusbe';
-        var TemplateID = isChina ? '496908' : '497278';
-        this.curphone = phone;
-        this.smscode = ('000000' + Math.floor(Math.random() * 999999)).slice(-6);
-        let req = new models.SendSmsRequest();
-        //console.log(this.smscode);
-        let params = '{"PhoneNumberSet":["' + phone + '"],"TemplateID":"' + TemplateID + '","Sign":"' + Sign + '","TemplateParamSet":["' + this.smscode + '"],"SmsSdkAppid":"1400294742"}'
-        req.from_json_string(params);
-        client.SendSms(req, function (errMsg, response) {
-            if (errMsg) {
-                cb(false, errMsg);
-                return;
+        try {
+            const res = await axios({
+                method: 'post',
+                url: `${ApiUrl}/sms/verifycode`,
+                headers: {
+                    'content-type': 'application/x-www-form-urlencoded',
+                },
+                data:
+                    'phone=' +
+                    encodeURIComponent(this.phone) +
+                    '&code=' +
+                    encodeURIComponent(code),
+            });
+            if (res && res.data && res.data.data) {
+                cb(this.phone);
+            } else {
+                cb(false);
             }
-            cb(true, response);
-        });
-    }
-}
+        } catch (error) {
+            console.log(error);
+            cb(false);
+        }
+    },
+    async sendAlarm(phone, cb = () => {}) {
+        var computername = '';
+        try {
+            const res = await axios({
+                method: 'post',
+                url: `${ApiUrl}/sms/sendsms`,
+                headers: {
+                    'content-type': 'application/x-www-form-urlencoded',
+                },
+                data:
+                    'phone=' +
+                    encodeURIComponent(phone) +
+                    '&type=' +
+                    encodeURIComponent('alarm') +
+                    '&params=' +
+                    encodeURIComponent(JSON.stringify([computername])),
+            });
+            if (res && res.data && res.data.data) {
+                cb(true);
+            } else {
+                cb(false);
+            }
+        } catch (error) {
+            console.log(error);
+            cb(false);
+        }
+    },
+    async sendSms(phone, cb = () => {}) {
+        try {
+            const res = await axios({
+                method: 'post',
+                url: `${ApiUrl}/sms/sendcode`,
+                headers: {
+                    'content-type': 'application/x-www-form-urlencoded',
+                },
+                data: 'phone=' + encodeURIComponent(phone),
+            });
+            if (res && res.data && res.data.data) {
+                this.phone = phone;
+                cb(true);
+            } else {
+                cb(false);
+            }
+        } catch (error) {
+            console.log(error);
+            cb(false);
+        }
+    },
+};
 Main.init();
 global.Main = Main;
-//Elspy._spy(Main);
+
 function isPoneAvailable($poneInput) {
     var myreg = /^[1][3,4,5,7,8][0-9]{9}$/;
     if (!myreg.test($poneInput)) {
