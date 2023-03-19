@@ -9,7 +9,7 @@ const sudo = require('sudo-prompt');
 const path = require('path');
 const url = require('url');
 const axios = require('axios');
-const ApiUrl = 'http://localhost:8801';
+const ApiUrl = 'http://focusbe.com:8801';
 require('@electron/remote/main').initialize();
 var Main = {
     init: function () {
