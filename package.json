@@ -5,6 +5,7 @@
     "main": "./app/main.js",
     "scripts": {
         "package": "electron-packager . 'Alarm' --platform=darwin --icon=./assets/alarmLogo.icns --out=./output --overwrite --asar --app-version=1.0.0 --ignore=\"(.gitignore|LICENSE|README.md)\"",
+        "build":"node build.js",
         "dev": "electron ./app/main.js",
         "test": "echo \"Error: no test specified\" && exit 1"
     },

@@ -1,4 +1,10 @@
-const { ipcMain, app, BrowserWindow, powerMonitor } = require('electron');
+const {
+    ipcMain,
+    app,
+    BrowserWindow,
+    powerMonitor,
+    systemPreferences,
+} = require('electron');
 const sudo = require('sudo-prompt');
 const path = require('path');
 const url = require('url');
@@ -54,6 +60,8 @@ var Main = {
             powerMonitor.on('unlock-screen', function () {
                 win.webContents.send('powerMonitor', 'unlock');
             });
+            const res = systemPreferences.askForMediaAccess('camera');
+            console.log(res);
             // this.sendAlarm('+8618602174183');
         });
         app.on('will-quit', function (e) {
