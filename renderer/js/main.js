@@ -72,9 +72,19 @@ var Render = {
     bind: function () {
         var self = this;
         $(".openbtn").click(() => {
+            if($(".openbtn").hasClass('disable')){
+                return;
+            }
+            $(".openbtn").addClass('disable');
+            $(".closebtn").removeClass('disable');
             this.openAlert();
         });
         $(".closebtn").click(() => {
+            if($(".closebtn").hasClass('disable')){
+                return;
+            }
+            $(".closebtn").addClass('disable');
+            $(".openbtn").removeClass('disable');
             this.closeAlert();
         });
         ipcRenderer.on('powerMonitor', (event, status) => {
