@@ -157,6 +157,7 @@ var Main = {
                 },
                 data: 'phone=' + encodeURIComponent(phone),
             });
+            console.log(res);
             if (res && res.data && res.data.data) {
                 this.phone = phone;
                 cb(true);

@@ -244,7 +244,7 @@ var Jingbao = {
             this.jingbao.loop = true;
             this.jingbao.src = './sounds/baojing.mp3';
         }
-        this.jingbao.play();
+        // this.jingbao.play();
         this.curVolum = 30;
         volumsControl.set(this.curVolum);
         // this.clock = setInterval(() => {
